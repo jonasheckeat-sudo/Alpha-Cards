@@ -1,0 +1,4 @@
+build/
+.gradle/
+*.p12
+.DS_Store
