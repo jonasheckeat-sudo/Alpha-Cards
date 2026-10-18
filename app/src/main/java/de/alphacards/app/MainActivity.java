@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
@@ -76,12 +77,19 @@ public class MainActivity extends Activity {
                 flush();
             }
         });
+        if (Build.VERSION.SDK_INT >= 33) requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 1);
         w.addJavascriptInterface(new Bridge(), "AC");
         take(getIntent());
         w.loadUrl("https://appassets.androidplatform.net/assets/www/index.html");
     }
 
     public class Bridge {
+        @JavascriptInterface
+        public void setReminders(String j) {
+            getSharedPreferences("rem", 0).edit().putString("json", j).apply();
+            Scheduler.schedule(MainActivity.this);
+        }
+
         @JavascriptInterface
         public void share(String t) {
             Intent i = new Intent(Intent.ACTION_SEND);
