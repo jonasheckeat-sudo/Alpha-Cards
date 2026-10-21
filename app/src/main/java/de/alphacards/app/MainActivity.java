@@ -85,6 +85,14 @@ public class MainActivity extends Activity {
 
     public class Bridge {
         @JavascriptInterface
+        public String takeResults() {
+            SharedPreferences p = getSharedPreferences("rem", 0);
+            String r = p.getString("results", "[]");
+            p.edit().remove("results").apply();
+            return r;
+        }
+
+        @JavascriptInterface
         public void setReminders(String j) {
             getSharedPreferences("rem", 0).edit().putString("json", j).apply();
             Scheduler.schedule(MainActivity.this);

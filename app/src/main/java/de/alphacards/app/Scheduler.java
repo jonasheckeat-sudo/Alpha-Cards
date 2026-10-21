@@ -37,7 +37,7 @@ public class Scheduler {
         try {
             AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
             for (int i = 0; i < 160; i++) {
-                if (i > 1 && i < 100) continue;
+                if (i > 2 && i < 100) continue;
                 PendingIntent x = pi(c, i, "", "", "", PendingIntent.FLAG_NO_CREATE);
                 if (x != null) {
                     am.cancel(x);
@@ -55,6 +55,11 @@ public class Scheduler {
             put(c, am, 1, next(o.optString("weekly", "19:00"), Calendar.SUNDAY),
                 "Alpha Cards \u00b7 Wochenr\u00fcckblick",
                 "Dein Wochenr\u00fcckblick ist da. Wische dich durch deine Woche.", "weekly");
+            String voc = o.optString("voc", "");
+            JSONArray pool = o.optJSONArray("pool");
+            if (!voc.isEmpty() && pool != null && pool.length() > 0) {
+                put(c, am, 2, next(voc, -1), "Vokabel des Tages", "", "vocab");
+            }
             String tm = daily.isEmpty() ? "18:00" : daily;
             String[] hm = tm.split(":");
             JSONArray ex = o.optJSONArray("exams");
